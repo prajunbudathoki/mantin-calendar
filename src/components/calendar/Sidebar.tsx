@@ -34,7 +34,7 @@ export default function Sidebar() {
       </div>
       <Button variant="filled" className="flex items-center">
         Create Event
-      </Button>
+      </Button> 
       <Calendar
         getDayProps={(date) => ({
           selected: selected.some((s) => dayjs(date).isSame(s, "date")),
