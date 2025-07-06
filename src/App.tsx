@@ -7,14 +7,12 @@ import { CalendarHeader } from "./components/calendar/CalendarHeader";
 import { useState } from "react";
 import dayjs, { Dayjs } from "dayjs";
 import CalendarView from "./components/calendar/CalendarView";
-
-type LabelProps = {
-  label: ["Day", "Week", "Month"];
-};
+import DayCalendar from "./components/calendar/DayCalendar";
+import MonthlyCalendar from "./components/calendar/MonthlyCalendar";
 
 function App() {
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
-  const [view, setView] = useState<"Day" | "Week" | "Month">("Week");
+  const [view, setView] = useState<"Day" | "Week" | "Month">("Month");
   return (
     <>
       <MantineProvider>
@@ -29,8 +27,16 @@ function App() {
               onChangeCurrentMonth={(day) => {
                 setCurrentMonth(day);
               }}
+              view={view}
+              onChangeView={setView}
             />
-            <CalendarView currentWeekStart={currentMonth.startOf("week")} />
+            {view === "Day" && <DayCalendar date={currentMonth} />}
+            {view === "Week" && (
+              <CalendarView currentWeekStart={currentMonth.startOf("week")} />
+            )}
+            {view === "Month" && (
+              <MonthlyCalendar currentMonth={currentMonth} />
+            )}
           </Box>
         </Box>
       </MantineProvider>
