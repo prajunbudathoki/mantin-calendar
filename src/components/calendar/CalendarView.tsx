@@ -34,7 +34,6 @@ export default function CalendarView({
           </Grid.Col>
         ))}
       </Grid>
-
       <ScrollArea h="calc(100vh - 100px)">
         <Grid gutter={0} columns={8}>
           <Grid.Col span={1}>

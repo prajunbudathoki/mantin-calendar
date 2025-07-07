@@ -1,45 +1,27 @@
-import { Box, Divider, MantineProvider } from "@mantine/core";
-import "./index.css";
-import Sidebar from "./components/calendar/Sidebar";
+import { MantineProvider } from "@mantine/core";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
-import { CalendarHeader } from "./components/calendar/CalendarHeader";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import AppLayout from "./AppLayout";
+import { CalendarDetails } from "./components/calendar/CalendarDetail";
+import "./index.css";
 import { useState } from "react";
-import dayjs, { Dayjs } from "dayjs";
-import CalendarView from "./components/calendar/CalendarView";
-import DayCalendar from "./components/calendar/DayCalendar";
-import MonthlyCalendar from "./components/calendar/MonthlyCalendar";
 
 function App() {
-  const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
-  const [view, setView] = useState<"Day" | "Week" | "Month">("Month");
+  const [selectedDates, setSelectedDates] = useState<string[]>([]);
   return (
     <>
-      <MantineProvider>
-        <Box display="flex" style={{ height: "100vh" }}>
-          <Box style={{ width: 280, minWidth: 220 }}>
-            <Sidebar />
-          </Box>
-          <Divider orientation="vertical" />
-          <Box style={{ flex: 1 }}>
-            <CalendarHeader
-              currentMonth={currentMonth}
-              onChangeCurrentMonth={(day) => {
-                setCurrentMonth(day);
-              }}
-              view={view}
-              onChangeView={setView}
+      <BrowserRouter>
+        <MantineProvider>
+          <Routes>
+            <Route path="/" element={<AppLayout />} />
+            <Route
+              path="/event/create"
+              element={<CalendarDetails selectedDates={selectedDates} />}
             />
-            {view === "Day" && <DayCalendar date={currentMonth} />}
-            {view === "Week" && (
-              <CalendarView currentWeekStart={currentMonth.startOf("week")} />
-            )}
-            {view === "Month" && (
-              <MonthlyCalendar currentMonth={currentMonth} />
-            )}
-          </Box>
-        </Box>
-      </MantineProvider>
+          </Routes>
+        </MantineProvider>
+      </BrowserRouter>
     </>
   );
 }

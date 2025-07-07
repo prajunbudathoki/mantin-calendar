@@ -3,4 +3,5 @@ export type CalendarEvents = {
   date: string;
   title: string;
   color: string;
+  type?: "event" | "task";
 };
