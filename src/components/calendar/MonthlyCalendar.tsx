@@ -1,4 +1,11 @@
-import { Box, Grid, Text, Paper } from "@mantine/core";
+import { Box, Grid, Text, Paper, Menu } from "@mantine/core";
+import {
+  IconMessageCircle,
+  IconPhoto,
+  IconPlus,
+  IconSettings,
+  IconTrash,
+} from "@tabler/icons-react";
 import dayjs, { Dayjs } from "dayjs";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
@@ -61,9 +68,29 @@ const MonthlyCalendar = ({ currentMonth }: { currentMonth: Dayjs }) => {
                 opacity: inMonth ? 1 : 0.4,
               }}
             >
-              <Text size="sm" fw={500}>
-                {day}
-              </Text>
+              <Menu shadow="md" width={200}>
+                <Menu.Target>
+                  <Text size="sm" fw={500}>
+                    {day}
+                  </Text>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Item leftSection={<IconPlus size={14} />}>
+                    Create event
+                  </Menu.Item>
+                  <Menu.Item leftSection={<IconMessageCircle size={14} />}>
+                    Messages
+                  </Menu.Item>
+                  <Menu.Item leftSection={<IconPhoto size={14} />}>
+                    Gallery
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Label>Danger Zone</Menu.Label>
+                  <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
+                    Delete Event
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
             </Paper>
           </Grid.Col>
         ))}
