@@ -12,12 +12,37 @@ import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { v4 as uuid } from "uuid";
+import type { CalendarEvents } from "../../types/Event";
 
-const fakeEvents = [
-  { id: "1", title: "Team Meeting", color: "blue" },
-  { id: "2", title: "Doctor Appointment", color: "red" },
-  { id: "3", title: "Project Deadline", color: "green" },
-  { id: "4", title: "Birthday Party", color: "yellow" },
+const fakeEvents: CalendarEvents[] = [
+  {
+    id: "1",
+    title: "Team Meeting",
+    color: "blue",
+    type: "event",
+    date: "2023-10-01",
+  },
+  {
+    id: "2",
+    title: "Doctor Appointment",
+    color: "red",
+    type: "event",
+    date: "2023-10-02",
+  },
+  {
+    id: "3",
+    title: "Project Deadline",
+    color: "green",
+    type: "event",
+    date: "2023-10-03",
+  },
+  {
+    id: "4",
+    title: "Birthday Party",
+    color: "yellow",
+    type: "event",
+    date: "2023-10-04",
+  },
 ];
 
 export default function Sidebar({
@@ -30,8 +55,10 @@ export default function Sidebar({
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"event" | "task" | null>(null);
 
-  type EventType = { id: string; title: string; color: string };
-  const [events, setEvents] = useState<EventType[]>(fakeEvents);
+  const [events, setEvents] = useState<typeof fakeEvents>(() => {
+    const stored = localStorage.getItem("events");
+    return stored ? JSON.parse(stored) : fakeEvents;
+  });
 
   useEffect(() => {
     const stored = localStorage.getItem("events");
@@ -70,13 +97,16 @@ export default function Sidebar({
     }
   };
 
-  const handleFormSubmit = (values: {
-    title: string;
-    color: string;
-  }) => {
+  const handleFormSubmit = (values: { title: string; color: string }) => {
     setEvents((prev) => [
       ...prev,
-      { id: uuid(), title: values.title, color: values.color },
+      {
+        id: uuid(),
+        title: values.title,
+        color: values.color,
+        date: selectedDates[0] || dayjs().format("YYYY-MM-DD"),
+        type: modalType ?? "event",
+      },
     ]);
     setModalOpen(false);
     setModalType(null);
@@ -154,23 +184,22 @@ export default function Sidebar({
           <form
             onSubmit={form.onSubmit(handleFormSubmit)}
             className="space-y-3"
-            >
-              <TextInput
-                label="Title"
-                placeholder="Event title"
-                {...form.getInputProps("title")}
-              />
-              <ColorInput
-                label="Select the color label"
-                {...form.getInputProps("color")}
-              />
-              <Button type="submit" fullWidth>
-                save
-              </Button>
-            </form>
-          )
-        }
-</Modal>
+          >
+            <TextInput
+              label="Title"
+              placeholder="Event title"
+              {...form.getInputProps("title")}
+            />
+            <ColorInput
+              label="Select the color label"
+              {...form.getInputProps("color")}
+            />
+            <Button type="submit" fullWidth>
+              save
+            </Button>
+          </form>
+        )}
+      </Modal>
     </div>
   );
 }
