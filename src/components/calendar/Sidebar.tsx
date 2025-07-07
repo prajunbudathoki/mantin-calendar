@@ -33,13 +33,13 @@ export default function Sidebar({
   }, [selectedDates, setSelectedDates]);
 
   const handleSelect = (date: string) => {
-    const isSelected = selected.some((s) => dayjs(date).isSame(s, "date"));
+    const isSelected = selectedDates.some((s) => dayjs(date).isSame(s, "date"));
     // console.log(isSelected);
     if (isSelected) {
       setSelectedDates((current) =>
         current.filter((d) => !dayjs(d).isSame(date, "date"))
       );
-    } else if (selected.length < 3) {
+    } else if (selectedDates.length < 3) {
       setSelectedDates((current) => [...current, date]);
     }
   };
