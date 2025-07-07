@@ -1,14 +1,23 @@
-import { Badge, Button, Menu, Modal } from "@mantine/core";
+import {
+  Badge,
+  Button,
+  ColorInput,
+  Menu,
+  Modal,
+  TextInput,
+} from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
+import { useForm } from "@mantine/form";
+import { v4 as uuid } from "uuid";
 
 const fakeEvents = [
-  { id: 1, title: "Team Meeting", color: "blue" },
-  { id: 2, title: "Doctor Appointment", color: "red" },
-  { id: 3, title: "Project Deadline", color: "green" },
-  { id: 4, title: "Birthday Party", color: "yellow" },
+  { id: "1", title: "Team Meeting", color: "blue" },
+  { id: "2", title: "Doctor Appointment", color: "red" },
+  { id: "3", title: "Project Deadline", color: "green" },
+  { id: "4", title: "Birthday Party", color: "yellow" },
 ];
 
 export default function Sidebar({
@@ -18,9 +27,22 @@ export default function Sidebar({
   selectedDates: string[];
   setSelectedDates: React.Dispatch<React.SetStateAction<string[]>>;
 }) {
-  const [selected, setSelected] = useState<string[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"event" | "task" | null>(null);
+
+  type EventType = { id: string; title: string; color: string };
+  const [events, setEvents] = useState<EventType[]>(fakeEvents);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("events");
+    if (stored) {
+      setEvents(JSON.parse(stored));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("events", JSON.stringify(events));
+  }, [events]);
 
   useEffect(() => {
     const today = dayjs().format("YYYY-MM-DD");
@@ -32,6 +54,10 @@ export default function Sidebar({
     }
   }, [selectedDates, setSelectedDates]);
 
+  const form = useForm({
+    initialValues: { title: "", color: "blue" },
+  });
+
   const handleSelect = (date: string) => {
     const isSelected = selectedDates.some((s) => dayjs(date).isSame(s, "date"));
     // console.log(isSelected);
@@ -42,6 +68,19 @@ export default function Sidebar({
     } else if (selectedDates.length < 3) {
       setSelectedDates((current) => [...current, date]);
     }
+  };
+
+  const handleFormSubmit = (values: {
+    title: string;
+    color: string;
+  }) => {
+    setEvents((prev) => [
+      ...prev,
+      { id: uuid(), title: values.title, color: values.color },
+    ]);
+    setModalOpen(false);
+    setModalType(null);
+    form.reset();
   };
   return (
     <div className="space-y-5 p-4">
@@ -88,7 +127,7 @@ export default function Sidebar({
       <div>
         <h3 className="mb-2 text-sm font-semibold">All events</h3>
         <div className="space-y-2 ">
-          {fakeEvents.map((event) => (
+          {events.map((event) => (
             <div key={event.id} className="flex items-center gap-2">
               <Badge
                 color={event.color}
@@ -106,12 +145,31 @@ export default function Sidebar({
         onClose={() => {
           setModalOpen(false);
           setModalType(null);
+          form.reset();
         }}
         centered
-        title={modalType === "event" ? "Create Event" : "Create Task"}
-      >
-        <p>{`placeholder for the ${modalType} form`}</p>
-      </Modal>
+        title={
+          modalType === "event" && (
+            <form
+              onSubmit={form.onSubmit(handleFormSubmit)}
+              className="space-y-3"
+            >
+              <TextInput
+                label="Title"
+                placeholder="Event title"
+                {...form.getInputProps("title")}
+              />
+              <ColorInput
+                label="Select the color label"
+                {...form.getInputProps("color")}
+              />
+              <Button type="submit" fullWidth>
+                save
+              </Button>
+            </form>
+          )
+        }
+      ></Modal>
     </div>
   );
 }
