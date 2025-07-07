@@ -70,7 +70,7 @@ export default function Sidebar({
       </Menu>
       <Calendar
         getDayProps={(date) => ({
-          selected: selected.some((s) => dayjs(date).isSame(s, "date")),
+          selected: selectedDates.some((s) => dayjs(date).isSame(s, "date")),
           onClick: () => handleSelect(date),
         })}
       />
