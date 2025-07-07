@@ -148,11 +148,12 @@ export default function Sidebar({
           form.reset();
         }}
         centered
-        title={
-          modalType === "event" && (
-            <form
-              onSubmit={form.onSubmit(handleFormSubmit)}
-              className="space-y-3"
+        title={modalType === "task" ? "Create Task" : "Create Event"}
+      >
+        {modalType === "event" && (
+          <form
+            onSubmit={form.onSubmit(handleFormSubmit)}
+            className="space-y-3"
             >
               <TextInput
                 label="Title"
@@ -169,7 +170,7 @@ export default function Sidebar({
             </form>
           )
         }
-      ></Modal>
+</Modal>
     </div>
   );
 }
