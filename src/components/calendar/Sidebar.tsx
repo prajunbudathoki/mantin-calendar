@@ -2,7 +2,7 @@ import { Badge, Button, Menu, Modal } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const fakeEvents = [
   { id: 1, title: "Team Meeting", color: "blue" },
@@ -22,8 +22,19 @@ export default function Sidebar({
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"event" | "task" | null>(null);
 
+  useEffect(() => {
+    const today = dayjs().format("YYYY-MM-DD");
+    const alreadySelected = selectedDates.some((d) =>
+      dayjs(d).isSame(today, "date")
+    );
+    if (!alreadySelected) {
+      setSelectedDates((current) => [...current, today]);
+    }
+  }, [selectedDates, setSelectedDates]);
+
   const handleSelect = (date: string) => {
     const isSelected = selected.some((s) => dayjs(date).isSame(s, "date"));
+    // console.log(isSelected);
     if (isSelected) {
       setSelectedDates((current) =>
         current.filter((d) => !dayjs(d).isSame(date, "date"))
