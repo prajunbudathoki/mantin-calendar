@@ -17,7 +17,10 @@ export default function AppLayout() {
   return (
     <Box display="flex" style={{ height: "100vh" }}>
       <Box style={{ width: 280, minWidth: 220 }}>
-        <Sidebar />
+        <Sidebar
+          selectedDates={selectedDates}
+          setSelectedDates={setSelectedDates}
+        />
       </Box>
       <Divider orientation="vertical" />
       <Box style={{ flex: 1 }}>
@@ -32,7 +35,10 @@ export default function AppLayout() {
           <CalendarView currentWeekStart={currentMonth.startOf("week")} />
         )}
         {view === "Month" && (
-          <MonthlyCalendar currentMonth={currentMonth} />
+          <MonthlyCalendar
+            currentMonth={currentMonth}
+            selectedDates={selectedDates}
+          />
         )}
       </Box>
       <Divider orientation="vertical" />

@@ -10,8 +10,14 @@ import { useNavigate } from "react-router-dom";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-const MonthlyCalendar = ({ currentMonth }: { currentMonth: Dayjs }) => {
-  const navigate = useNavigate()
+const MonthlyCalendar = ({
+  currentMonth,
+  selectedDates,
+}: {
+  currentMonth: Dayjs;
+  selectedDates: string[];
+}) => {
+  const navigate = useNavigate();
   const startOfMonth = currentMonth.startOf("month");
   const startDayIndx = startOfMonth.day();
   const daysInMonth = currentMonth.daysInMonth();
@@ -64,7 +70,13 @@ const MonthlyCalendar = ({ currentMonth }: { currentMonth: Dayjs }) => {
               h={120}
               withBorder
               radius="sm"
-              bg={dayjs().isSame(date, "day") ? "#1971c2" : undefined}
+              bg={
+                dayjs().isSame(date, "day")
+                  ? "#1971c2"
+                  : selectedDates.some((d) => dayjs(d).isSame(date, "date"))
+                  ? "#e7f5ff"
+                  : undefined
+              }
               style={{
                 opacity: inMonth ? 1 : 0.4,
               }}
@@ -76,7 +88,10 @@ const MonthlyCalendar = ({ currentMonth }: { currentMonth: Dayjs }) => {
                   </Text>
                 </Menu.Target>
                 <Menu.Dropdown>
-                  <Menu.Item leftSection={<IconPlus size={14} />} onClick={() => navigate("/create/event")}>
+                  <Menu.Item
+                    leftSection={<IconPlus size={14} />}
+                    onClick={() => navigate("/create/event")}
+                  >
                     Create event
                   </Menu.Item>
                   <Menu.Item leftSection={<IconMessageCircle size={14} />}>

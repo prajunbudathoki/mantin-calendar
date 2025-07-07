@@ -11,7 +11,13 @@ const fakeEvents = [
   { id: 4, title: "Birthday Party", color: "yellow" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({
+  selectedDates,
+  setSelectedDates,
+}: {
+  selectedDates: string[];
+  setSelectedDates: React.Dispatch<React.SetStateAction<string[]>>;
+}) {
   const [selected, setSelected] = useState<string[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"event" | "task" | null>(null);
@@ -19,11 +25,11 @@ export default function Sidebar() {
   const handleSelect = (date: string) => {
     const isSelected = selected.some((s) => dayjs(date).isSame(s, "date"));
     if (isSelected) {
-      setSelected((current) =>
+      setSelectedDates((current) =>
         current.filter((d) => !dayjs(d).isSame(date, "date"))
       );
     } else if (selected.length < 3) {
-      setSelected((current) => [...current, date]);
+      setSelectedDates((current) => [...current, date]);
     }
   };
   return (
@@ -98,9 +104,3 @@ export default function Sidebar() {
     </div>
   );
 }
-
-
-
-
-
-

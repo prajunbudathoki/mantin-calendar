@@ -1,5 +1,5 @@
 import { getEvents } from "../../utils/localStorage";
-import { Box, Text, Title, Stack, Badge, Paper, Divider } from "@mantine/core";
+import { Box, Text, Title, Stack, Badge, Paper } from "@mantine/core";
 import { useEffect, useState } from "react";
 import dayjs from "dayjs";
 import type { CalendarEvents } from "../../types/Event";
