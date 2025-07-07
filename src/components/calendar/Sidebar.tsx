@@ -1,4 +1,4 @@
-import { Badge, Button, Menu } from "@mantine/core";
+import { Badge, Button, Menu, Modal } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
 import { IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
@@ -13,6 +13,9 @@ const fakeEvents = [
 
 export default function Sidebar() {
   const [selected, setSelected] = useState<string[]>([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState<"event" | "task" | null>(null);
+
   const handleSelect = (date: string) => {
     const isSelected = selected.some((s) => dayjs(date).isSame(s, "date"));
     if (isSelected) {
@@ -41,8 +44,22 @@ export default function Sidebar() {
           </Button>
         </Menu.Target>
         <Menu.Dropdown>
-          <Menu.Item>Event</Menu.Item>
-          <Menu.Item>Task</Menu.Item>
+          <Menu.Item
+            onClick={() => {
+              setModalType("event");
+              setModalOpen(true);
+            }}
+          >
+            Event
+          </Menu.Item>
+          <Menu.Item
+            onClick={() => {
+              setModalType("task");
+              setModalOpen(true);
+            }}
+          >
+            Task
+          </Menu.Item>
         </Menu.Dropdown>
       </Menu>
       <Calendar
@@ -67,6 +84,17 @@ export default function Sidebar() {
           ))}
         </div>
       </div>
+      <Modal
+        opened={modalOpen}
+        onClose={() => {
+          setModalOpen(false);
+          setModalType(null);
+        }}
+        centered
+        title={modalType === "event" ? "Create Event" : "Create Task"}
+      >
+        <p>{`placeholder for the ${modalType} form`}</p>
+      </Modal>
     </div>
   );
 }
