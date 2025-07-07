@@ -13,6 +13,7 @@ export default function AppLayout() {
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [view, setView] = useState<"Day" | "Week" | "Month">("Month");
+  const [events, setEvents] = useState<any[]>([]);
 
   return (
     <Box display="flex" style={{ height: "100vh" }}>
@@ -38,6 +39,7 @@ export default function AppLayout() {
           <MonthlyCalendar
             currentMonth={currentMonth}
             selectedDates={selectedDates}
+            events={events}
           />
         )}
       </Box>

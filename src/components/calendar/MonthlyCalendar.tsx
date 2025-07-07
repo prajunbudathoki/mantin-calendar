@@ -7,15 +7,18 @@ import {
 } from "@tabler/icons-react";
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from "react-router-dom";
+import type { CalendarEvents } from "../../types/Event";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const MonthlyCalendar = ({
   currentMonth,
   selectedDates,
+  events,
 }: {
   currentMonth: Dayjs;
   selectedDates: string[];
+  events: CalendarEvents[];
 }) => {
   const navigate = useNavigate();
   const startOfMonth = currentMonth.startOf("month");
@@ -50,7 +53,6 @@ const MonthlyCalendar = ({
       date: nextMonth.date(i),
     });
   }
-
   return (
     <Box>
       <Grid columns={7} gutter="xs" mb="lg">
@@ -63,53 +65,79 @@ const MonthlyCalendar = ({
         ))}
       </Grid>
       <Grid columns={7} gutter="xs">
-        {calendarDays.map(({ day, inMonth, date }, index) => (
-          <Grid.Col key={index} span={1}>
-            <Paper
-              p="xs"
-              h={120}
-              withBorder
-              radius="sm"
-              bg={
-                dayjs().isSame(date, "day")
-                  ? "#1971c2"
-                  : selectedDates.some((d) => dayjs(d).isSame(date, "date"))
-                  ? "#e7f5ff"
-                  : undefined
-              }
-              style={{
-                opacity: inMonth ? 1 : 0.4,
-              }}
-            >
-              <Menu shadow="md" width={200}>
-                <Menu.Target>
-                  <Text size="sm" fw={600}>
-                    {day}
-                  </Text>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    leftSection={<IconPlus size={14} />}
-                    onClick={() => navigate("/create/event")}
-                  >
-                    Create event
-                  </Menu.Item>
-                  <Menu.Item leftSection={<IconMessageCircle size={14} />}>
-                    Messages
-                  </Menu.Item>
-                  <Menu.Item leftSection={<IconPhoto size={14} />}>
-                    Gallery
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Label>Danger Zone</Menu.Label>
-                  <Menu.Item color="red" leftSection={<IconTrash size={14} />}>
-                    Delete Event
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            </Paper>
-          </Grid.Col>
-        ))}
+        {calendarDays.map(({ day, inMonth, date }, index) => {
+          const dayEvents = events.filter((event) =>
+            dayjs(event.date).isSame(date, "day")
+          );
+          return (
+            <Grid.Col key={index} span={1}>
+              <Paper
+                p="xs"
+                h={120}
+                withBorder
+                radius="sm"
+                bg={
+                  dayjs().isSame(date, "day")
+                    ? "#1971c2"
+                    : selectedDates.some((d) => dayjs(d).isSame(date, "date"))
+                    ? "#e7f5ff"
+                    : undefined
+                }
+                style={{
+                  opacity: inMonth ? 1 : 0.4,
+                }}
+              >
+                <Menu shadow="md" width={200}>
+                  <Menu.Target>
+                    <Text size="sm" fw={600}>
+                      {day}
+                    </Text>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      leftSection={<IconPlus size={14} />}
+                      onClick={() => navigate("/create/event")}
+                    >
+                      Create event
+                    </Menu.Item>
+                    <Menu.Item leftSection={<IconMessageCircle size={14} />}>
+                      Messages
+                    </Menu.Item>
+                    <Menu.Item leftSection={<IconPhoto size={14} />}>
+                      Gallery
+                    </Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Label>Danger Zone</Menu.Label>
+                    <Menu.Item
+                      color="red"
+                      leftSection={<IconTrash size={14} />}
+                    >
+                      Delete Event
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+                <div style={{ marginTop: 8 }}>
+                  {dayEvents.map((event) => (
+                    <div
+                      key={event.id}
+                      style={{
+                        backgroundColor: event.color,
+                        padding: "4px 8px",
+                        borderRadius: 4,
+                        marginBottom: 4,
+                        color: "#fff",
+                        cursor: "pointer",
+                      }}
+                      title={event.title}
+                    >
+                      {event.title}
+                    </div>
+                  ))}
+                </div>
+              </Paper>
+            </Grid.Col>
+          );
+        })}
       </Grid>
     </Box>
   );
