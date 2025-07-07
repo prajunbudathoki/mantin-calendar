@@ -1,7 +1,8 @@
-import { Badge, Button } from "@mantine/core";
+import { Badge, Button, Menu } from "@mantine/core";
 import { Calendar } from "@mantine/dates";
-import { useState } from "react";
+import { IconPlus } from "@tabler/icons-react";
 import dayjs from "dayjs";
+import { useState } from "react";
 
 const fakeEvents = [
   { id: 1, title: "Team Meeting", color: "blue" },
@@ -32,9 +33,18 @@ export default function Sidebar() {
         />
         <p className="mb-1 text-xl font-bold">Calender</p>
       </div>
-      <Button variant="filled" className="flex items-center">
-        Create Event
-      </Button> 
+      <Menu shadow="md" width={200}>
+        <Menu.Target>
+          <Button variant="filled">
+            <IconPlus />
+            Create Event
+          </Button>
+        </Menu.Target>
+        <Menu.Dropdown>
+          <Menu.Item>Event</Menu.Item>
+          <Menu.Item>Task</Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
       <Calendar
         getDayProps={(date) => ({
           selected: selected.some((s) => dayjs(date).isSame(s, "date")),

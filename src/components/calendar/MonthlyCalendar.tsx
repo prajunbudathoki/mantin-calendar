@@ -3,7 +3,6 @@ import {
   IconMessageCircle,
   IconPhoto,
   IconPlus,
-  IconSettings,
   IconTrash,
 } from "@tabler/icons-react";
 import dayjs, { Dayjs } from "dayjs";
@@ -60,7 +59,7 @@ const MonthlyCalendar = ({ currentMonth }: { currentMonth: Dayjs }) => {
           <Grid.Col key={index} span={1}>
             <Paper
               p="xs"
-              h={80}
+              h={120}
               withBorder
               radius="sm"
               bg={dayjs().isSame(date, "day") ? "#1971c2" : undefined}
@@ -70,7 +69,7 @@ const MonthlyCalendar = ({ currentMonth }: { currentMonth: Dayjs }) => {
             >
               <Menu shadow="md" width={200}>
                 <Menu.Target>
-                  <Text size="sm" fw={500}>
+                  <Text size="sm" fw={600}>
                     {day}
                   </Text>
                 </Menu.Target>
