@@ -113,6 +113,7 @@ const MonthlyCalendar = ({
                     <Menu.Item
                       color="red"
                       leftSection={<IconTrash size={14} />}
+                      disabled={dayEvents.length === 0}
                       onClick={() => {
                         if (dayEvents.length === 0) {
                           return;
