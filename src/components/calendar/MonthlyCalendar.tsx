@@ -8,6 +8,7 @@ import {
 import dayjs, { Dayjs } from "dayjs";
 import { useNavigate } from "react-router-dom";
 import type { CalendarEvents } from "../../types/Event";
+import { deleteEvent } from "../../utils/localStorage";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -20,7 +21,6 @@ const MonthlyCalendar = ({
   selectedDates: string[];
   events: CalendarEvents[];
 }) => {
-  console.log(selectedDates);
   const navigate = useNavigate();
   const startOfMonth = currentMonth.startOf("month");
   const startDayIndx = startOfMonth.day();
@@ -71,12 +71,6 @@ const MonthlyCalendar = ({
           const dayEvents = events.filter((event) =>
             dayjs(event.date).isSame(date, "day")
           );
-          console.log(
-            "Calendar day:",
-            date.format("YYYY-MM-DD"),
-            "Events:",
-            events.map((e) => dayjs(e.date).format("YYYY-MM-DD"))
-          );
           return (
             <Grid.Col key={index} span={1}>
               <Paper
@@ -119,6 +113,13 @@ const MonthlyCalendar = ({
                     <Menu.Item
                       color="red"
                       leftSection={<IconTrash size={14} />}
+                      onClick={() => {
+                        if (dayEvents.length === 0) {
+                          return;
+                        }
+                        deleteEvent(dayEvents[0].id);
+                        window.location.reload();
+                      }}
                     >
                       Delete Event
                     </Menu.Item>

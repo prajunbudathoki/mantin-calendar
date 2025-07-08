@@ -113,7 +113,7 @@ export default function Sidebar({
     form.reset();
   };
   return (
-    <div className="space-y-5 p-4">
+    <div className="space-y-5 p-4 fixed">
       <div className="flex items-center gap-2">
         <img
           width={40}
