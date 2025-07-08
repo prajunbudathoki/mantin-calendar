@@ -15,10 +15,12 @@ const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const MonthlyCalendar = ({
   currentMonth,
   selectedDates,
+  setSelectedDates,
   events,
 }: {
   currentMonth: Dayjs;
   selectedDates: string[];
+  setSelectedDates: (dates: string[]) => void;
   events: CalendarEvents[];
 }) => {
   const navigate = useNavigate();
@@ -82,11 +84,17 @@ const MonthlyCalendar = ({
                   dayjs().isSame(date, "day")
                     ? "#1971c2"
                     : selectedDates.some((d) => dayjs(d).isSame(date, "date"))
-                    ? "#e7f5ff"
+                    ? "#004a77"
                     : undefined
                 }
+                onClick={() => {
+                  if (inMonth) {
+                    setSelectedDates([date.toISOString()]);
+                  }
+                }}
                 style={{
                   opacity: inMonth ? 1 : 0.4,
+                  cursor: inMonth ? "pointer" : "not-allowed",
                 }}
               >
                 <Menu shadow="md" width={200}>

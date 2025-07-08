@@ -47,6 +47,7 @@ export default function AppLayout() {
           <MonthlyCalendar
             currentMonth={currentMonth}
             selectedDates={selectedDates}
+            setSelectedDates={setSelectedDates}
             events={events}
           />
         )}

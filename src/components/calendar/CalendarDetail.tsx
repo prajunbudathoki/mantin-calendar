@@ -22,7 +22,13 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
           dayjs(event.date).isAfter(dayjs().subtract(1, "day"))
         );
   return (
-    <Box p="xl">
+    <Box
+      p="xl"
+      style={{
+        position: "sticky",
+        top: 0,
+      }}
+    >
       <Title order={4} mb="md">
         {selectedDates.length > 0
           ? "Events on Selected Date"
