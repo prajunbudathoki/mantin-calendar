@@ -104,9 +104,11 @@ const MonthlyCalendar = ({
                     </Text>
                   </Menu.Target>
                   <Menu.Dropdown>
-                    <Menu.Item
+                    {/* <Menu.Item
                       leftSection={<IconPlus size={14} />}
-                      onClick={() => navigate("/create/event")}
+                      onClick={() =>
+                        navigate(`/create/event?date=${date.toISOString()}`)
+                      }
                     >
                       Create event
                     </Menu.Item>
@@ -115,9 +117,7 @@ const MonthlyCalendar = ({
                     </Menu.Item>
                     <Menu.Item leftSection={<IconPhoto size={14} />}>
                       Gallery
-                    </Menu.Item>
-                    <Menu.Divider />
-                    <Menu.Label>Danger Zone</Menu.Label>
+                    </Menu.Item> */}
                     <Menu.Item
                       color="red"
                       leftSection={<IconTrash size={14} />}

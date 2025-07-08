@@ -104,7 +104,9 @@ export default function Sidebar({
         id: uuid(),
         title: values.title,
         color: values.color,
-        date: selectedDates[0] || dayjs().format("YYYY-MM-DD"),
+        date:
+          selectedDates[selectedDates.length - 1] ||
+          dayjs().format("YYYY-MM-DD"),
         type: modalType ?? "event",
       },
     ]);
