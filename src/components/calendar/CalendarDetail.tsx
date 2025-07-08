@@ -8,6 +8,7 @@ interface CalendarDetailsProps {
   selectedDates: string[];
 }
 
+
 export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
   const [events, setEvents] = useState<CalendarEvents[]>([]);
   useEffect(() => {
