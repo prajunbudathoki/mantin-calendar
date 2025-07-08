@@ -1,6 +1,6 @@
 import { Box, Divider } from "@mantine/core";
 import type { Dayjs } from "dayjs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Sidebar from "./components/calendar/Sidebar";
 import { CalendarHeader } from "./components/calendar/CalendarHeader";
 import DayCalendar from "./components/calendar/DayCalendar";
@@ -8,12 +8,20 @@ import CalendarView from "./components/calendar/CalendarView";
 import MonthlyCalendar from "./components/calendar/MonthlyCalendar";
 import { CalendarDetails } from "./components/calendar/CalendarDetail";
 import dayjs from "dayjs";
+import type { CalendarEvents } from "./types/Event";
 
 export default function AppLayout() {
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
   const [view, setView] = useState<"Day" | "Week" | "Month">("Month");
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<CalendarEvents[]>([]);
+
+  useEffect(() => {
+    const stored = localStorage.getItem("events");
+    if (stored) {
+      setEvents(JSON.parse(stored));
+    }
+  }, []);
 
   return (
     <Box display="flex" style={{ height: "100vh" }}>

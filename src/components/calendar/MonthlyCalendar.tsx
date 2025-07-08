@@ -20,6 +20,7 @@ const MonthlyCalendar = ({
   selectedDates: string[];
   events: CalendarEvents[];
 }) => {
+  console.log(selectedDates);
   const navigate = useNavigate();
   const startOfMonth = currentMonth.startOf("month");
   const startDayIndx = startOfMonth.day();
@@ -51,6 +52,7 @@ const MonthlyCalendar = ({
       day: i,
       inMonth: false,
       date: nextMonth.date(i),
+      selectedDates,
     });
   }
   return (
@@ -68,6 +70,12 @@ const MonthlyCalendar = ({
         {calendarDays.map(({ day, inMonth, date }, index) => {
           const dayEvents = events.filter((event) =>
             dayjs(event.date).isSame(date, "day")
+          );
+          console.log(
+            "Calendar day:",
+            date.format("YYYY-MM-DD"),
+            "Events:",
+            events.map((e) => dayjs(e.date).format("YYYY-MM-DD"))
           );
           return (
             <Grid.Col key={index} span={1}>
@@ -120,17 +128,17 @@ const MonthlyCalendar = ({
                   {dayEvents.map((event) => (
                     <div
                       key={event.id}
-                      style={{
-                        backgroundColor: event.color,
-                        padding: "4px 8px",
-                        borderRadius: 4,
-                        marginBottom: 4,
-                        color: "#fff",
-                        cursor: "pointer",
-                      }}
+                      className="flex items-center gap-2 rounded-md px-2"
                       title={event.title}
+                      style={{ backgroundColor: `${event.color}33` }}
                     >
-                      {event.title}
+                      <div
+                        className="h-2 w-2 flex-shrink-0 rounded-full"
+                        style={{ backgroundColor: event.color }}
+                      ></div>
+                      <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                        {event.title}
+                      </span>
                     </div>
                   ))}
                 </div>
