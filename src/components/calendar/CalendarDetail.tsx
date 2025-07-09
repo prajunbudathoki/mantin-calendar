@@ -1,16 +1,16 @@
-import { getEvents } from "../../utils/localStorage";
-import { Box, Text, Title, Stack, Badge, Paper } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { Badge, Box, Paper, Stack, Text, Title } from "@mantine/core";
 import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 import type { CalendarEvents } from "../../types/Event";
+import { getEvents } from "../../utils/localStorage";
 
 interface CalendarDetailsProps {
   selectedDates: string[];
 }
 
-
 export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
   const [events, setEvents] = useState<CalendarEvents[]>([]);
+
   useEffect(() => {
     setEvents(getEvents());
   }, []);

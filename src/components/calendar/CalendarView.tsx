@@ -47,18 +47,14 @@ export default function CalendarView({
           </Grid.Col>
 
           {days.map((day, colIdx) => (
-            <Grid.Col
-              span={1}
-              key={day.toString()}
-              style={{ borderLeft: "1px solid #333" }}
-            >
+            <Grid.Col span={1} key={day.toString()}>
               {hours.map((_, rowIdx) => (
                 <Box
                   key={`${colIdx}-${rowIdx}`}
                   h={60}
                   style={{
                     position: "relative",
-                    border: "1px solid"
+                    border: "1px solid #2b2b2b",
                   }}
                 ></Box>
               ))}
