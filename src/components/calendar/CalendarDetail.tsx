@@ -14,7 +14,7 @@ import {
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import type { CalendarEvents } from "../../types/Event";
-import { getEvents } from "../../utils/localStorage";
+import { addEvents, getEvents } from "../../utils/localStorage";
 
 interface CalendarDetailsProps {
   selectedDates: string[];
@@ -26,6 +26,18 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
   useEffect(() => {
     setEvents(getEvents());
   }, []);
+
+  const handleFieldChange = (
+    id: string,
+    field: keyof CalendarEvents,
+    value: string
+  ) => {
+    const updatedEvents = events.map((event) =>
+      event.id === id ? { ...event, [field]: value } : event
+    );
+    setEvents(updatedEvents);
+    addEvents(updatedEvents);
+  };
 
   const filteredEvents =
     selectedDates.length > 0
@@ -54,11 +66,12 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
                 <TextInput
                   label="Title"
                   value={event.title}
-                  readOnly
+                  onChange={(e) =>
+                    handleFieldChange(event.id, "title", e.target.value)
+                  }
                   variant="filled"
                 />
                 <Divider />
-
                 <Stack gap={4}>
                   <Text size="sm" c="dimmed">
                     Date
@@ -66,28 +79,16 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
                   <Text>{dayjs(event.date).format("dddd, MMMM D, YYYY")}</Text>
                   {/* <Checkbox label="All-day" checked={event.allDay} readOnly /> */}
                 </Stack>
-
                 <Divider />
-
                 <Textarea
                   label="Description"
-                  // value={event.description || ""}
-                  readOnly
+                  value={event.description || ""}
                   variant="filled"
+                  onChange={(e) =>
+                    handleFieldChange(event.id, "description", e.target.value)
+                  }
                 />
-
-                <Text size="sm" c="dimmed" mt="sm">
-                  Organizer
-                </Text>
                 {/* <Text>{event.organizer ?? "N/A"}</Text> */}
-
-                <Stack gap="xs">
-                  <Text size="sm" c="dimmed">
-                    Availability
-                  </Text>
-                  {/* <Text>{event.availability ?? "Free"}</Text> */}
-                </Stack>
-
                 <Badge color={event.color || "gray"} size="sm" mt="xs">
                   {event.type ?? "event"}
                 </Badge>
