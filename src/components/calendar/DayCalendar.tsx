@@ -9,7 +9,13 @@ const hours: string[] = Array.from({ length: 24 }, (_, i) =>
   dayjs().hour(i).format("hh A")
 );
 
-const DayCalendar = ({ date }: { date: Dayjs }) => {
+const DayCalendar = ({
+  date,
+  setSelectedTime,
+}: {
+  date: Dayjs;
+  setSelectedTime: (time: string) => void;
+}) => {
   const [events, setEvents] = useState<CalendarEvents[]>([]);
 
   useEffect(() => {
@@ -28,7 +34,6 @@ const DayCalendar = ({ date }: { date: Dayjs }) => {
         const slotEvents = eventsForDay.filter((event) =>
           event.time?.startsWith(slotTime)
         );
-
         return (
           <Box
             key={hour}
@@ -41,12 +46,13 @@ const DayCalendar = ({ date }: { date: Dayjs }) => {
                 dayjs().isSame(date, "day") && dayjs().hour() === index
                   ? "#e0f7fa"
                   : undefined,
+              cursor: "pointer",
             }}
+            onClick={() => setSelectedTime(slotTime)}
           >
             <Text size="xs" c="dimmed" mb={4}>
               {hour}
             </Text>
-
             {slotEvents.map((event) => (
               <Box
                 key={event.id}

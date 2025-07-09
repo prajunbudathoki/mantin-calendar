@@ -13,9 +13,9 @@ import type { CalendarEvents } from "./types/Event";
 export default function AppLayout() {
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
-  const [view, setView] = useState<"Day" | "Week" | "Month">("Month");
+  const [view, setView] = useState<"Day" | "Week" | "Month">("Day");
   const [events, setEvents] = useState<CalendarEvents[]>([]);
-
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
   useEffect(() => {
     const stored = localStorage.getItem("events");
     if (stored) {
@@ -29,6 +29,8 @@ export default function AppLayout() {
         <Sidebar
           selectedDates={selectedDates}
           setSelectedDates={setSelectedDates}
+          selectedTime={selectedTime}
+          setSelectedTime={setSelectedTime}
         />
       </Box>
       <Divider orientation="vertical" />
@@ -39,7 +41,9 @@ export default function AppLayout() {
           view={view}
           onChangeView={setView}
         />
-        {view === "Day" && <DayCalendar date={currentMonth} />}
+        {view === "Day" && (
+          <DayCalendar date={currentMonth} setSelectedTime={setSelectedTime} />
+        )}
         {view === "Week" && (
           <CalendarView currentWeekStart={currentMonth.startOf("week")} />
         )}

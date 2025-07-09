@@ -48,9 +48,13 @@ const fakeEvents: CalendarEvents[] = [
 export default function Sidebar({
   selectedDates,
   setSelectedDates,
+  selectedTime,
+  setSelectedTime,
 }: {
   selectedDates: string[];
   setSelectedDates: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedTime: string | null;
+  setSelectedTime: React.Dispatch<React.SetStateAction<string | null>>;
 }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [modalType, setModalType] = useState<"event" | "task" | null>(null);
@@ -82,8 +86,12 @@ export default function Sidebar({
   }, [selectedDates, setSelectedDates]);
 
   const form = useForm({
-    initialValues: { title: "", color: "blue" },
+    initialValues: { title: "", color: "blue", time: selectedTime || "" },
   });
+
+  useEffect(() => {
+    form.setFieldValue("time", selectedTime || "");
+  }, [selectedTime]);
 
   const handleSelect = (date: string) => {
     const isSelected = selectedDates.some((s) => dayjs(date).isSame(s, "date"));
@@ -97,7 +105,11 @@ export default function Sidebar({
     }
   };
 
-  const handleFormSubmit = (values: { title: string; color: string }) => {
+  const handleFormSubmit = (values: {
+    title: string;
+    color: string;
+    time?: string;
+  }) => {
     setEvents((prev) => [
       ...prev,
       {
@@ -108,6 +120,7 @@ export default function Sidebar({
           selectedDates[selectedDates.length - 1] ||
           dayjs().format("YYYY-MM-DD"),
         type: modalType ?? "event",
+        time: values.time || selectedTime || undefined,
       },
     ]);
     setModalOpen(false);
