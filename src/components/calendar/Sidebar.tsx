@@ -171,20 +171,31 @@ export default function Sidebar({
       />
       <div>
         <h3 className="mb-2 text-sm font-semibold">All events</h3>
-        <div className="space-y-2 ">
+        <div
+          className="space-y-2 bg-gray-100 rounded-md p-2"
+          style={{
+            maxHeight: 500,
+            overflowY: "auto",
+            paddingRight: 4,
+          }}
+        >
           {events.map((event) => (
-            <div key={event.id} className="flex items-center gap-2">
+            <div
+              key={event.id}
+              className="flex items-center gap-2 text-sm py-1 pr-2"
+            >
               <Badge
                 color={event.color}
                 variant="filled"
                 size="xs"
                 radius="xs"
               />
-              <span>{event.title}</span>
+              <span className="truncate">{event.title}</span>
             </div>
           ))}
         </div>
       </div>
+
       <Modal
         opened={modalOpen}
         onClose={() => {

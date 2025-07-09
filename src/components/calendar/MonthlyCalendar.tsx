@@ -9,6 +9,7 @@ import {
   Badge,
 } from "@mantine/core";
 import {
+  IconEdit,
   IconMessageCircle,
   IconPhoto,
   IconPlus,
@@ -76,38 +77,78 @@ const MonthlyCalendar = ({
         opened={modalOpen}
         onClose={() => setModalOpen(false)}
         centered
-        size={"lg"}
-        style={{ maxWidth: 600 }}
+        size="lg"
+        radius="md"
+        withCloseButton={false}
       >
         {selectedEvent && (
-          <div className="flex flex-col gap-4">
-            <div className="flex gap-2 items-center">
-              <Badge color={selectedEvent.color} size="sm" radius="xs" />
-              <h1 className="font-bold">{selectedEvent.title}</h1>
-            </div>
-            <div>{dayjs(selectedEvent.date).format("MMMM D, YYYY")}</div>
-            <div>
-              {selectedEvent.description || (
-                <span style={{ color: "#888" }}>No description</span>
-              )}
-            </div>
-
-            <div style={{ marginTop: 12 }}>
-              <Button
-                color="red"
-                leftSection={<IconTrash size={14} />}
-                onClick={() => {
-                  deleteEvent(selectedEvent.id);
-                  setModalOpen(false);
-                  window.location.reload();
-                }}
-              >
-                Delete
-              </Button>
-            </div>
-          </div>
+          <Box p="md" style={{ borderRadius: 12 }}>
+            <Box
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: "0.5rem",
+              }}
+            >
+              <div className="flex items-center gap-2">
+                <Badge
+                  color={selectedEvent.color}
+                  variant="filled"
+                  size="xs"
+                  radius="xs"
+                />
+                <Text fw={500} fz="lg" c="dark">
+                  {selectedEvent.title}
+                </Text>
+              </div>
+              <div className="flex items-center gap-2">
+                <Button variant="subtle" color="gray" size="xs">
+                  <IconEdit size={16} />
+                </Button>
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  size="xs"
+                  onClick={() => {
+                    deleteEvent(selectedEvent.id);
+                    setModalOpen(false);
+                    window.location.reload();
+                  }}
+                >
+                  <IconTrash size={16} />
+                </Button>
+                <Button variant="subtle" color="gray" size="xs">
+                  <IconMessageCircle size={16} />
+                </Button>
+                <Button
+                  variant="subtle"
+                  color="gray"
+                  size="xs"
+                  onClick={() => setModalOpen(false)}
+                >
+                  X
+                </Button>
+              </div>
+            </Box>
+            <Text c="gray" size="sm" mb={4}>
+              {dayjs(selectedEvent.date).format("dddd, MMMM D")} • 12:00 –
+              12:30am
+            </Text>
+            <Box mt="sm" mb="xs">
+              <Text size="sm" c="dimmed">
+                ⏰ 30 minutes before
+              </Text>
+            </Box>
+            <Box mt="xs">
+              <Text size="sm" c="dimmed">
+                📅 Prajun Budhathoki
+              </Text>
+            </Box>
+          </Box>
         )}
       </Modal>
+
       <Box>
         <Grid columns={7} gutter="xs" mb="lg">
           {weekdays.map((day) => (
