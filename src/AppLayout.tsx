@@ -13,7 +13,7 @@ import type { CalendarEvents } from "./types/Event";
 export default function AppLayout() {
   const [currentMonth, setCurrentMonth] = useState<Dayjs>(dayjs());
   const [selectedDates, setSelectedDates] = useState<string[]>([]);
-  const [view, setView] = useState<"Day" | "Week" | "Month">("Day");
+  const [view, setView] = useState<"Day" | "Week" | "Month">("Month");
   const [events, setEvents] = useState<CalendarEvents[]>([]);
   const [selectedTime, setSelectedTime] = useState<string | null>(null);
   useEffect(() => {

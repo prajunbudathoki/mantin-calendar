@@ -7,14 +7,13 @@ import {
   Title,
   TextInput,
   Textarea,
-  Checkbox,
-  Select,
   Divider,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import type { CalendarEvents } from "../../types/Event";
 import { addEvents, getEvents } from "../../utils/localStorage";
+import { v4 as uuid } from "uuid";
 
 interface CalendarDetailsProps {
   selectedDates: string[];
@@ -39,6 +38,21 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
     addEvents(updatedEvents);
   };
 
+  const handleAddEvent = (date: string) => {
+    const newEvent: CalendarEvents = {
+      id: uuid(),
+      title: "",
+      date,
+      color: "blue",
+      type: "event",
+      description: "",
+    };
+    const updatedEvents = [...events, newEvent];
+    setEvents(updatedEvents);
+    addEvents(updatedEvents);
+    return newEvent;
+  };
+
   const filteredEvents =
     selectedDates.length > 0
       ? events.filter((event) =>
@@ -48,6 +62,50 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
           dayjs(event.date).isAfter(dayjs().subtract(1, "day"))
         );
 
+  const showEmptyForm =
+    selectedDates.length === 1 && filteredEvents.length === 0;
+
+  if (showEmptyForm) {
+    const newEvent = handleAddEvent(selectedDates[0]);
+    return (
+      <Box p="xl" style={{ position: "sticky", top: 0 }}>
+        <Title order={4} mb="md">
+          Create Event on {dayjs(newEvent.date).format("MMMM D, YYYY")}
+        </Title>
+        <Paper withBorder p="md" radius="md">
+          <Stack gap="sm">
+            <TextInput
+              label="Title"
+              value={newEvent.title}
+              onChange={(e) =>
+                handleFieldChange(newEvent.id, "title", e.target.value)
+              }
+              variant="filled"
+            />
+            <Divider />
+            <Stack gap={4}>
+              <Text size="sm" c="dimmed">
+                Date
+              </Text>
+              <Text>{dayjs(newEvent.date).format("dddd, MMMM D, YYYY")}</Text>
+            </Stack>
+            <Divider />
+            <Textarea
+              label="Description"
+              value={newEvent.description || ""}
+              variant="filled"
+              onChange={(e) =>
+                handleFieldChange(newEvent.id, "description", e.target.value)
+              }
+            />
+            <Badge color={newEvent.color || "gray"} size="sm" mt="xs">
+              {newEvent.type ?? "event"}
+            </Badge>
+          </Stack>
+        </Paper>
+      </Box>
+    );
+  }
   return (
     <Box p="xl" style={{ position: "sticky", top: 0 }}>
       <Title order={4} mb="md">
@@ -77,7 +135,6 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
                     Date
                   </Text>
                   <Text>{dayjs(event.date).format("dddd, MMMM D, YYYY")}</Text>
-                  {/* <Checkbox label="All-day" checked={event.allDay} readOnly /> */}
                 </Stack>
                 <Divider />
                 <Textarea
@@ -88,7 +145,6 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
                     handleFieldChange(event.id, "description", e.target.value)
                   }
                 />
-                {/* <Text>{event.organizer ?? "N/A"}</Text> */}
                 <Badge color={event.color || "gray"} size="sm" mt="xs">
                   {event.type ?? "event"}
                 </Badge>
