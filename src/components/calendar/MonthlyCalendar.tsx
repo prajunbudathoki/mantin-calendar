@@ -83,11 +83,9 @@ const MonthlyCalendar = ({
           <div className="flex flex-col gap-4">
             <div className="flex gap-2 items-center">
               <Badge color={selectedEvent.color} size="sm" radius="xs" />
-              <h1 className="font-">{selectedEvent.title}</h1>
+              <h1 className="font-bold">{selectedEvent.title}</h1>
             </div>
-            <div>
-              {dayjs(selectedEvent.date).format("MMMM D, YYYY")}
-            </div>
+            <div>{dayjs(selectedEvent.date).format("MMMM D, YYYY")}</div>
             <div>
               {selectedEvent.description || (
                 <span style={{ color: "#888" }}>No description</span>
@@ -132,13 +130,6 @@ const MonthlyCalendar = ({
                   h={120}
                   withBorder
                   radius="sm"
-                  bg={
-                    dayjs().isSame(date, "day")
-                      ? "#1971c2"
-                      : selectedDates.some((d) => dayjs(d).isSame(date, "date"))
-                      ? "#004a77"
-                      : undefined
-                  }
                   onClick={() => {
                     setSelectedDates([date.toISOString()]);
                   }}
@@ -158,7 +149,29 @@ const MonthlyCalendar = ({
                     onClose={() => setOpenedMenuIndex(null)}
                   >
                     <Menu.Target>
-                      <Text size="sm" fw={600}>
+                      <Text
+                        size="sm"
+                        fw={600}
+                        style={{
+                          display: "inline-block",
+                          padding: "2px 6px",
+                          borderRadius: 4,
+                          backgroundColor: dayjs().isSame(date, "day")
+                            ? "#2E7D32"
+                            : selectedDates.some((d) =>
+                                dayjs(d).isSame(date, "day")
+                              )
+                            ? "#01579B"
+                            : undefined,
+                          color:
+                            dayjs().isSame(date, "day") ||
+                            selectedDates.some((d) =>
+                              dayjs(d).isSame(date, "day")
+                            )
+                              ? "#fff"
+                              : undefined,
+                        }}
+                      >
                         {day}
                       </Text>
                     </Menu.Target>
