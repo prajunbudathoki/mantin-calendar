@@ -1,4 +1,13 @@
-import { Box, Grid, Text, Paper, Menu } from "@mantine/core";
+import {
+  Box,
+  Grid,
+  Text,
+  Paper,
+  Menu,
+  Modal,
+  Button,
+  Badge,
+} from "@mantine/core";
 import {
   IconMessageCircle,
   IconPhoto,
@@ -24,6 +33,10 @@ const MonthlyCalendar = ({
   events: CalendarEvents[];
 }) => {
   const [openedMenuIndex, setOpenedMenuIndex] = useState<number | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedEvent, setSelectedEvent] = useState<CalendarEvents | null>(
+    null
+  );
   const startOfMonth = currentMonth.startOf("month");
   const startDayIndx = startOfMonth.day();
   const daysInMonth = currentMonth.daysInMonth();
@@ -58,99 +71,144 @@ const MonthlyCalendar = ({
     });
   }
   return (
-    <Box>
-      <Grid columns={7} gutter="xs" mb="lg">
-        {weekdays.map((day) => (
-          <Grid.Col span={1} key={day}>
-            <Text ta="center" fw={500} c="dimmed">
-              {day}
-            </Text>
-          </Grid.Col>
-        ))}
-      </Grid>
-      <Grid columns={7} gutter="xs">
-        {calendarDays.map(({ day, inMonth, date }, index) => {
-          const dayEvents = events.filter((event) =>
-            dayjs(event.date).isSame(date, "day")
-          );
-          return (
-            <Grid.Col key={index} span={1}>
-              <Paper
-                p="xs"
-                h={120}
-                withBorder
-                radius="sm"
-                bg={
-                  dayjs().isSame(date, "day")
-                    ? "#1971c2"
-                    : selectedDates.some((d) => dayjs(d).isSame(date, "date"))
-                    ? "#004a77"
-                    : undefined
-                }
+    <>
+      <Modal
+        opened={modalOpen}
+        onClose={() => setModalOpen(false)}
+        centered
+        size={"lg"}
+        style={{ maxWidth: 600 }}
+      >
+        {selectedEvent && (
+          <div className="flex flex-col gap-4">
+            <div className="flex gap-2 items-center">
+              <Badge color={selectedEvent.color} size="sm" radius="xs" />
+              <h1 className="font-">{selectedEvent.title}</h1>
+            </div>
+            <div>
+              {dayjs(selectedEvent.date).format("MMMM D, YYYY")}
+            </div>
+            <div>
+              {selectedEvent.description || (
+                <span style={{ color: "#888" }}>No description</span>
+              )}
+            </div>
+
+            <div style={{ marginTop: 12 }}>
+              <Button
+                color="red"
+                leftSection={<IconTrash size={14} />}
                 onClick={() => {
-                  setSelectedDates([date.toISOString()]);
-                }}
-                onContextMenu={(e) => {
-                  e.preventDefault();
-                  setOpenedMenuIndex(index);
-                }}
-                style={{
-                  opacity: inMonth ? 1 : 0.4,
-                  cursor: inMonth ? "pointer" : "not-allowed",
+                  deleteEvent(selectedEvent.id);
+                  setModalOpen(false);
+                  window.location.reload();
                 }}
               >
-                <Menu
-                  shadow="md"
-                  width={200}
-                  opened={openedMenuIndex === index}
-                  onClose={() => setOpenedMenuIndex(null)}
-                >
-                  <Menu.Target>
-                    <Text size="sm" fw={600}>
-                      {day}
-                    </Text>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    <Menu.Item
-                      color="red"
-                      leftSection={<IconTrash size={14} />}
-                      disabled={dayEvents.length === 0}
-                      onClick={() => {
-                        if (dayEvents.length === 0) {
-                          return;
-                        }
-                        deleteEvent(dayEvents[0].id);
-                        window.location.reload();
-                      }}
-                    >
-                      Delete Event
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-                <div style={{ marginTop: 8 }}>
-                  {dayEvents.map((event) => (
-                    <div
-                      key={event.id}
-                      className="flex items-center gap-2 rounded-md px-2 py-1 text-xs"
-                      title={event.title}
-                      style={{ backgroundColor: `${event.color}33` }}
-                    >
-                      <div
-                        className="h-2 w-2 flex-shrink-0 rounded-full"
-                        style={{ backgroundColor: event.color }}
-                      ></div>
-                      <span className="overflow-hidden text-ellipsis whitespace-nowrap">
-                        {event.title}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </Paper>
+                Delete
+              </Button>
+            </div>
+          </div>
+        )}
+      </Modal>
+      <Box>
+        <Grid columns={7} gutter="xs" mb="lg">
+          {weekdays.map((day) => (
+            <Grid.Col span={1} key={day}>
+              <Text ta="center" fw={500} c="dimmed">
+                {day}
+              </Text>
             </Grid.Col>
-          );
-        })}
-      </Grid>
-    </Box>
+          ))}
+        </Grid>
+        <Grid columns={7} gutter="xs">
+          {calendarDays.map(({ day, inMonth, date }, index) => {
+            const dayEvents = events.filter((event) =>
+              dayjs(event.date).isSame(date, "day")
+            );
+            return (
+              <Grid.Col key={index} span={1}>
+                <Paper
+                  p="xs"
+                  h={120}
+                  withBorder
+                  radius="sm"
+                  bg={
+                    dayjs().isSame(date, "day")
+                      ? "#1971c2"
+                      : selectedDates.some((d) => dayjs(d).isSame(date, "date"))
+                      ? "#004a77"
+                      : undefined
+                  }
+                  onClick={() => {
+                    setSelectedDates([date.toISOString()]);
+                  }}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setOpenedMenuIndex(index);
+                  }}
+                  style={{
+                    opacity: inMonth ? 1 : 0.4,
+                    cursor: inMonth ? "pointer" : "not-allowed",
+                  }}
+                >
+                  <Menu
+                    shadow="md"
+                    width={200}
+                    opened={openedMenuIndex === index}
+                    onClose={() => setOpenedMenuIndex(null)}
+                  >
+                    <Menu.Target>
+                      <Text size="sm" fw={600}>
+                        {day}
+                      </Text>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item
+                        color="red"
+                        leftSection={<IconTrash size={14} />}
+                        disabled={dayEvents.length === 0}
+                        onClick={() => {
+                          if (dayEvents.length === 0) {
+                            return;
+                          }
+                          deleteEvent(dayEvents[0].id);
+                          window.location.reload();
+                        }}
+                      >
+                        Delete Event
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                  <div style={{ marginTop: 8 }}>
+                    {dayEvents.map((event) => (
+                      <div
+                        key={event.id}
+                        className="flex items-center gap-2 rounded-md px-2 py-1 text-xs"
+                        title={event.title}
+                        style={{ backgroundColor: `${event.color}33` }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedEvent(event);
+                          setModalOpen(true);
+                        }}
+                      >
+                        <div
+                          className="h-2 w-2 flex-shrink-0 rounded-full"
+                          style={{ backgroundColor: event.color }}
+                        ></div>
+                        <span className="overflow-hidden text-ellipsis whitespace-nowrap">
+                          {event.title}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </Paper>
+              </Grid.Col>
+            );
+          })}
+        </Grid>
+      </Box>
+    </>
   );
 };
 

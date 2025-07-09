@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppLayout from "./AppLayout";
 import "./index.css";
 import EventCreate from "./pages/EventCreate";
+import Eventedit from "./pages/Eventedit";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <MantineProvider>
           <Routes>
             <Route path="/" element={<AppLayout />} />
+            <Route path="/eventedit/:id" element={<Eventedit />} />
             {/* <Route path="/event/create" element={<EventCreate />} /> */}
           </Routes>
         </MantineProvider>
