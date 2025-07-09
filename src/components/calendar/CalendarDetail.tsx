@@ -70,9 +70,6 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
     const newEvent = handleAddEvent(selectedDates[0], "");
     return (
       <Box p="xl" style={{ position: "sticky", top: 0 }}>
-        <Title order={4} mb="md">
-          Create Event on {dayjs(newEvent.date).format("MMMM D, YYYY")}
-        </Title>
         <Paper withBorder p="md" radius="md">
           <Stack gap="sm">
             <TextInput

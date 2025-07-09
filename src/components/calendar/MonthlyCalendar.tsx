@@ -35,7 +35,7 @@ const MonthlyCalendar = ({
   for (let i = startDayIndx - 1; i >= 0; i--) {
     calendarDays.push({
       day: daysInPrevMonth - i,
-      inMonth: false,
+      inMonth: true,
       date: prevMonth.date(daysInPrevMonth - i),
     });
   }
@@ -52,7 +52,7 @@ const MonthlyCalendar = ({
   for (let i = 1; i <= remaining; i++) {
     calendarDays.push({
       day: i,
-      inMonth: false,
+      inMonth: true,
       date: nextMonth.date(i),
       selectedDates,
     });
@@ -88,9 +88,7 @@ const MonthlyCalendar = ({
                     : undefined
                 }
                 onClick={() => {
-                  if (inMonth) {
-                    setSelectedDates([date.toISOString()]);
-                  }
+                  setSelectedDates([date.toISOString()]);
                 }}
                 onContextMenu={(e) => {
                   e.preventDefault();
