@@ -67,7 +67,7 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
     selectedDates.length === 1 && filteredEvents.length === 0;
 
   if (showEmptyForm) {
-    const newEvent = handleAddEvent(selectedDates[0], "blue");
+    const newEvent = handleAddEvent(selectedDates[0], "");
     return (
       <Box p="xl" style={{ position: "sticky", top: 0 }}>
         <Title order={4} mb="md">

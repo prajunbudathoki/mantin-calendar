@@ -6,9 +6,9 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import dayjs, { Dayjs } from "dayjs";
-import { useNavigate } from "react-router-dom";
 import type { CalendarEvents } from "../../types/Event";
 import { deleteEvent } from "../../utils/localStorage";
+import { useState } from "react";
 
 const weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -23,7 +23,7 @@ const MonthlyCalendar = ({
   setSelectedDates: (dates: string[]) => void;
   events: CalendarEvents[];
 }) => {
-  const navigate = useNavigate();
+  const [openedMenuIndex, setOpenedMenuIndex] = useState<number | null>(null);
   const startOfMonth = currentMonth.startOf("month");
   const startDayIndx = startOfMonth.day();
   const daysInMonth = currentMonth.daysInMonth();
@@ -92,32 +92,27 @@ const MonthlyCalendar = ({
                     setSelectedDates([date.toISOString()]);
                   }
                 }}
+                onContextMenu={(e) => {
+                  e.preventDefault();
+                  setOpenedMenuIndex(index);
+                }}
                 style={{
                   opacity: inMonth ? 1 : 0.4,
                   cursor: inMonth ? "pointer" : "not-allowed",
                 }}
               >
-                <Menu shadow="md" width={200}>
+                <Menu
+                  shadow="md"
+                  width={200}
+                  opened={openedMenuIndex === index}
+                  onClose={() => setOpenedMenuIndex(null)}
+                >
                   <Menu.Target>
                     <Text size="sm" fw={600}>
                       {day}
                     </Text>
                   </Menu.Target>
                   <Menu.Dropdown>
-                    {/* <Menu.Item
-                      leftSection={<IconPlus size={14} />}
-                      onClick={() =>
-                        navigate(`/create/event?date=${date.toISOString()}`)
-                      }
-                    >
-                      Create event
-                    </Menu.Item>
-                    <Menu.Item leftSection={<IconMessageCircle size={14} />}>
-                      Messages
-                    </Menu.Item>
-                    <Menu.Item leftSection={<IconPhoto size={14} />}>
-                      Gallery
-                    </Menu.Item> */}
                     <Menu.Item
                       color="red"
                       leftSection={<IconTrash size={14} />}
@@ -138,7 +133,7 @@ const MonthlyCalendar = ({
                   {dayEvents.map((event) => (
                     <div
                       key={event.id}
-                      className="flex items-center gap-2 rounded-md px-2"
+                      className="flex items-center gap-2 rounded-md px-2 py-1 text-xs"
                       title={event.title}
                       style={{ backgroundColor: `${event.color}33` }}
                     >
