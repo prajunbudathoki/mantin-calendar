@@ -8,6 +8,7 @@ import {
   TextInput,
   Textarea,
   Divider,
+  ColorInput,
 } from "@mantine/core";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -38,12 +39,12 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
     addEvents(updatedEvents);
   };
 
-  const handleAddEvent = (date: string) => {
+  const handleAddEvent = (date: string, color: string) => {
     const newEvent: CalendarEvents = {
       id: uuid(),
       title: "",
       date,
-      color: "blue",
+      color: color,
       type: "event",
       description: "",
     };
@@ -66,7 +67,7 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
     selectedDates.length === 1 && filteredEvents.length === 0;
 
   if (showEmptyForm) {
-    const newEvent = handleAddEvent(selectedDates[0]);
+    const newEvent = handleAddEvent(selectedDates[0], "blue");
     return (
       <Box p="xl" style={{ position: "sticky", top: 0 }}>
         <Title order={4} mb="md">
@@ -96,6 +97,13 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
               variant="filled"
               onChange={(e) =>
                 handleFieldChange(newEvent.id, "description", e.target.value)
+              }
+            />
+            <ColorInput
+              label="Select the color label"
+              value={newEvent.color || ""}
+              onChange={(color) =>
+                handleFieldChange(newEvent.id, "color", color)
               }
             />
             <Badge color={newEvent.color || "gray"} size="sm" mt="xs">
@@ -143,6 +151,13 @@ export function CalendarDetails({ selectedDates }: CalendarDetailsProps) {
                   variant="filled"
                   onChange={(e) =>
                     handleFieldChange(event.id, "description", e.target.value)
+                  }
+                />
+                <ColorInput
+                  label="Select the color label"
+                  value={event.color || ""}
+                  onChange={(color) =>
+                    handleFieldChange(event.id, "color", color)
                   }
                 />
                 <Badge color={event.color || "gray"} size="sm" mt="xs">
